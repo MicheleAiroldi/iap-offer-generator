@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +26,6 @@
       background: white;
       border: 2px solid #ccc;
       border-radius: 10px;
-      padding: 1rem;
       width: 280px;
       height: 140px;
       display: flex;
@@ -53,24 +53,13 @@
     button:hover {
       background: #45a049;
     }
-    .rolling-text {
-      position: absolute;
-      width: 100%;
-      text-align: center;
-      animation: roll 2.5s ease-out;
-    }
-    @keyframes roll {
-      0% { top: 100%; }
-      90% { top: -50%; }
-      100% { top: 0; }
-    }
   </style>
 </head>
 <body>
   <h1>✨ IAP Offer Idea Generator 🎰</h1>
   <div class="slot-container">
-    <div class="slot" id="player1"></div>
-    <div class="slot" id="player2"></div>
+    <div class="slot" id="player1">🎲</div>
+    <div class="slot" id="player2">🎲</div>
   </div>
   <button onclick="spin()">🎲 Spin!</button>
 
@@ -115,21 +104,31 @@
       return result;
     }
 
+    function animateSlot(slotId, finalValue, delay) {
+      const slot = document.getElementById(slotId);
+      let i = 0;
+      let intervalTime = 50;
+
+      const spinner = setInterval(() => {
+        const r = playerProps[Math.floor(Math.random() * playerProps.length)];
+        slot.innerHTML = `${r.text}<br><small>(${r.category})</small>`;
+        i++;
+
+        if (i > 15) intervalTime = 100;
+        if (i > 25) intervalTime = 150;
+        if (i > 35) intervalTime = 200;
+
+        if (i > 40) {
+          clearInterval(spinner);
+          slot.innerHTML = `${finalValue.text}<br><small>(${finalValue.category})</small>`;
+        }
+      }, intervalTime);
+    }
+
     function spin() {
-      const slotIds = ["player1", "player2"];
       const [p1, p2] = getUniqueRandomItems(playerProps, 2);
-      const values = [p1, p2];
-
-      slotIds.forEach((id, i) => {
-        const el = document.getElementById(id);
-        el.innerHTML = "";
-
-        const rollText = document.createElement("div");
-        rollText.className = "rolling-text";
-        rollText.innerHTML = `${values[i].text}<br><small>(${values[i].category})</small>`;
-
-        el.appendChild(rollText);
-      });
+      animateSlot("player1", p1, 0);
+      setTimeout(() => animateSlot("player2", p2, 200), 300);
     }
 
     window.onload = spin;
