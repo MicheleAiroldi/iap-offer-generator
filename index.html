@@ -35,7 +35,6 @@
     .reel {
       position: absolute;
       width: 100%;
-      transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     .item {
       height: 140px;
@@ -102,20 +101,18 @@
       { text: "Lean Into My Playstyle", category: "Emotional" }
     ];
 
-    function buildReel(reelId, stopAt) {
+    function buildReel(reelId, stopAt, duration) {
       const reel = document.getElementById(reelId);
       reel.innerHTML = '';
       reel.style.transition = 'none';
       reel.style.transform = 'translateY(0)';
 
       const items = [];
-
       for (let i = 0; i < 20; i++) {
         const r = playerProps[Math.floor(Math.random() * playerProps.length)];
         items.push(r);
       }
-
-      items.push(stopAt); // force the last one to be the final result
+      items.push(stopAt); // ensure last item is the final one
 
       items.forEach(p => {
         const div = document.createElement('div');
@@ -124,9 +121,8 @@
         reel.appendChild(div);
       });
 
-      // Allow DOM to settle then animate
       setTimeout(() => {
-        reel.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+        reel.style.transition = `transform ${duration}s cubic-bezier(0.25, 0.1, 0.25, 1)`;
         reel.style.transform = `translateY(-${140 * (items.length - 1)}px)`;
       }, 50);
     }
@@ -143,8 +139,11 @@
 
     function spin() {
       const [p1, p2] = getUniqueRandomItems(playerProps, 2);
-      buildReel("reel1", p1);
-      buildReel("reel2", p2);
+      const fastFirst = Math.random() > 0.5;
+      const durations = fastFirst ? [2.0, 2.8] : [2.8, 2.0];
+
+      buildReel("reel1", p1, durations[0]);
+      buildReel("reel2", p2, durations[1]);
     }
 
     window.onload = spin;
