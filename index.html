@@ -69,6 +69,8 @@
     <div class="slot"><div class="reel" id="reel2"></div></div>
   </div>
   <button onclick="spin()">🎲 Spin!</button>
+  <br><br>
+  <button onclick="copyResult()" style="background:#2196F3;">📋 Copy Result</button>
 
   <script>
     const playerProps = [
@@ -146,7 +148,22 @@
       buildReel("reel2", p2, durations[1]);
     }
 
+    
+    function copyResult() {
+      const reel1 = document.getElementById("reel1");
+      const reel2 = document.getElementById("reel2");
+      const getText = (reel) => {
+        const items = reel.getElementsByClassName("item");
+        return items[items.length - 1].textContent.split("(")[0].trim();
+      };
+      const result = getText(reel1) + " + " + getText(reel2);
+      navigator.clipboard.writeText(result).then(() => {
+        alert("Copied to clipboard:\n" + result);
+      });
+    }
+
     window.onload = spin;
+    
   </script>
 </body>
 </html>
