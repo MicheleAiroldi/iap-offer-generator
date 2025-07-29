@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IAP Offer Idea Generator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f4f4f4;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .slot-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .slot {
+      background: white;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 1rem;
+      width: 280px;
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .slot.rolling {
+      animation: pulse 0.5s ease-in-out infinite;
+      color: #bbb;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    small {
+      font-size: 0.85rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>✨ IAP Offer Idea Generator 🎰</h1>
+  <div class="slot-container">
+    <div class="slot" id="player1"></div>
+    <div class="slot" id="player2"></div>
+  </div>
+  <button onclick="spin()">🎲 Spin!</button>
+
+  <script>
+    const playerProps = [
+      { text: "Accelerate My Progress", category: "Progression" },
+      { text: "A Sense of Progression", category: "Progression" },
+      { text: "Complete What I Started", category: "Progression" },
+      { text: "Fix My Stuck State", category: "Progression" },
+      { text: "Seize the Moment", category: "Timing" },
+      { text: "Unlock a Bargain", category: "Timing" },
+      { text: "Make My Time Count", category: "Timing" },
+      { text: "Stack My Advantages", category: "Timing" },
+      { text: "Control My Destiny", category: "Agency" },
+      { text: "Customize My Experience", category: "Agency" },
+      { text: "Recover from a Loss", category: "Agency" },
+      { text: "Pick My Reward", category: "Agency" },
+      { text: "Feel Like a VIP", category: "Status" },
+      { text: "Show Off My Status", category: "Status" },
+      { text: "Celebrate a Milestone", category: "Status" },
+      { text: "Experience the Thrill", category: "Excitement" },
+      { text: "Break the Routine", category: "Excitement" },
+      { text: "Open the Mystery Box", category: "Excitement" },
+      { text: "Push My Luck", category: "Excitement" },
+      { text: "Play With My Crew", category: "Social" },
+      { text: "Beat the Rest", category: "Social" },
+      { text: "Be Generous", category: "Social" },
+      { text: "Stand Out in the Crowd", category: "Social" },
+      { text: "Share the Love", category: "Social" },
+      { text: "Feel in Control", category: "Emotional" },
+      { text: "Reward My Effort", category: "Emotional" },
+      { text: "Lean Into My Playstyle", category: "Emotional" }
+    ];
+
+    function getUniqueRandomItems(arr, count) {
+      const copy = [...arr];
+      const result = [];
+      for (let i = 0; i < count && copy.length > 0; i++) {
+        const index = Math.floor(Math.random() * copy.length);
+        result.push(copy.splice(index, 1)[0]);
+      }
+      return result;
+    }
+
+    function showRollingEffect(ids) {
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.add("rolling");
+        el.innerHTML = "Spinning...";
+      });
+    }
+
+    function stopRollingEffect(ids, values) {
+      ids.forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.classList.remove("rolling");
+        el.innerHTML = `${values[i].text}<br><small>(${values[i].category})</small>`;
+      });
+    }
+
+    function spin() {
+      const slotIds = ["player1", "player2"];
+      showRollingEffect(slotIds);
+      setTimeout(() => {
+        const [p1, p2] = getUniqueRandomItems(playerProps, 2);
+        stopRollingEffect(slotIds, [p1, p2]);
+      }, 2500);
+    }
+
+    window.onload = spin;
+  </script>
+</body>
+</html>
