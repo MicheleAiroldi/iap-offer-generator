@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,17 +34,12 @@
       justify-content: center;
       font-size: 1rem;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
+      overflow: hidden;
       position: relative;
     }
-    .slot.rolling {
-      animation: pulse 0.5s ease-in-out infinite;
-      color: #bbb;
-    }
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.3; }
-      100% { opacity: 1; }
+    .slot small {
+      font-size: 0.85rem;
+      color: #666;
     }
     button {
       background: #4CAF50;
@@ -59,9 +53,16 @@
     button:hover {
       background: #45a049;
     }
-    small {
-      font-size: 0.85rem;
-      color: #666;
+    .rolling-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      animation: roll 2.5s ease-out;
+    }
+    @keyframes roll {
+      0% { top: 100%; }
+      90% { top: -50%; }
+      100% { top: 0; }
     }
   </style>
 </head>
@@ -114,29 +115,21 @@
       return result;
     }
 
-    function showRollingEffect(ids) {
-      ids.forEach(id => {
-        const el = document.getElementById(id);
-        el.classList.add("rolling");
-        el.innerHTML = "Spinning...";
-      });
-    }
-
-    function stopRollingEffect(ids, values) {
-      ids.forEach((id, i) => {
-        const el = document.getElementById(id);
-        el.classList.remove("rolling");
-        el.innerHTML = `${values[i].text}<br><small>(${values[i].category})</small>`;
-      });
-    }
-
     function spin() {
       const slotIds = ["player1", "player2"];
-      showRollingEffect(slotIds);
-      setTimeout(() => {
-        const [p1, p2] = getUniqueRandomItems(playerProps, 2);
-        stopRollingEffect(slotIds, [p1, p2]);
-      }, 2500);
+      const [p1, p2] = getUniqueRandomItems(playerProps, 2);
+      const values = [p1, p2];
+
+      slotIds.forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.innerHTML = "";
+
+        const rollText = document.createElement("div");
+        rollText.className = "rolling-text";
+        rollText.innerHTML = `${values[i].text}<br><small>(${values[i].category})</small>`;
+
+        el.appendChild(rollText);
+      });
     }
 
     window.onload = spin;
